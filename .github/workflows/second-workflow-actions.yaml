@@ -1,0 +1,10 @@
+name: Github Actions
+on: workflow_dispatch
+jobs:
+  use-ready-actions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v4
+      - name: list directories
+        run: ls
