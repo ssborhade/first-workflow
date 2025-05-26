@@ -1,7 +1,7 @@
 name: Github Context and Expressions
 on: workflow_dispatch
 jobs:
-  use-ready-actions:
+  use-context-expressions:
     runs-on: ubuntu-latest
     steps:
       - name: checkout code
