@@ -12,3 +12,5 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
           architecture: x64
+      - name: Run maven build
+        run: mvn clean build
