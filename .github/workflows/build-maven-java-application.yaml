@@ -13,4 +13,4 @@ jobs:
           distribution: 'temurin'
           architecture: x64
       - name: Run maven build
-        run: mvn clean build
+        run: mvn clean install
