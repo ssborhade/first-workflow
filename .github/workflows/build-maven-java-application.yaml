@@ -1,7 +1,7 @@
 name: Build Application
 on: workflow_dispatch
 jobs:
-  use-ready-actions:
+  build-an-application:
     runs-on: ubuntu-latest
     steps:
       - name: checkout code
