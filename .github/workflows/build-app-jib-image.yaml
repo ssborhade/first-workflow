@@ -1,0 +1,25 @@
+name: Java Build with Jib and Push to Docker Hub
+
+on:
+  workflow_dispatch:
+
+jobs:
+  jib-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Build and Push with Jib
+        run: |
+          ./mvnw compile jib:build \
+            -Dimage=${{ secrets.DOCKERHUB_USERNAME }}/demo-java-app \
+            -Djib.to.auth.username=${{ secrets.DOCKERHUB_USERNAME }} \
+            -Djib.to.auth.password=${{ secrets.DOCKERHUB_TOKEN }}
