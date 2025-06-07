@@ -20,9 +20,9 @@ jobs:
       - name: Make mvnw executable
         run: chmod +x ./mvnw
 
-      - name: Build and Push with Jib
+      - name: Build and Push with Jib (using global Maven)
         run: |
-          ./mvnw compile jib:build \
-            -Dimage=${{ secrets.DOCKERHUB_USERNAME }}/demo-java-app \
-            -Djib.to.auth.username=${{ secrets.DOCKERHUB_USERNAME }} \
-            -Djib.to.auth.password=${{ secrets.DOCKERHUB_TOKEN }}
+           mvn compile jib:build \
+           -Dimage=${{ secrets.DOCKERHUB_USERNAME }}/myfirstapp \
+           -Djib.to.auth.username=${{ secrets.DOCKERHUB_USERNAME }} \
+           -Djib.to.auth.password=${{ secrets.DOCKERHUB_TOKEN }}
