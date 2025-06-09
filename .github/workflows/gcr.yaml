@@ -1,4 +1,5 @@
 name: GCR build and push
+
 on:
   workflow_dispatch:
 
@@ -7,22 +8,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source
+      - name: Checkout source code
         uses: actions/checkout@v3
 
-      - name: Decode base64 key
-        id: decode_key
+      - name: Decode base64 key and configure credentials
         run: |
-          echo "${{ secrets.GCP_SA_KEY }}" | base64 -d > sa-key.json
-          echo "key_json<<EOF" >> $GITHUB_OUTPUT
-          cat sa-key.json >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-
-      - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v2
-        with:
-          credentials_json: '${{ steps.decode_key.outputs.key_json }}'
-          export_default_credentials: true
+          echo "${{ secrets.GCP_SA }}" | base64 -d > sa-key.json
+          echo "::add-mask::$(cat sa-key.json)"
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$PWD/sa-key.json" >> $GITHUB_ENV
 
       - name: Docker login to Artifact Registry
         run: |
