@@ -1,34 +1,33 @@
-name: GCR build and push
+name:  GR BUILD and PUSH
 
 on:
   workflow_dispatch:
 
 jobs:
-  docker-job:
+  docker:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout source
         uses: actions/checkout@v3
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      - name: Decode base64 secret to JSON key file
+        run: |
+          echo "${{ secrets.GCP_SA_KEY_BASE64 }}" | base64 -d > sa-key.json
 
-      # ✅ AUTHENTICATE WITH GCP
-      - name: Authenticate with GCP
+      - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: '${{ secrets.GCP_SA }}'   
+          credentials_json: '${{ secrets.GCP_SA_KEY_BASE64 }}'
+          token_format: access_token  # Optional but recommended for clarity
           export_default_credentials: true
 
-      # ✅ LOG IN TO ARTIFACT REGISTRY
       - name: Docker login to Artifact Registry
         run: |
-          echo "${{ secrets.GCP_SA }}" | docker login -u _json_key --password-stdin https://europe-west3-docker.pkg.dev
+          docker login -u _json_key --password-stdin https://europe-west3-docker.pkg.dev < sa-key.json
 
-      # ✅ BUILD AND PUSH IMAGE
-      - name: Build and Push Docker image
+      - name: Build and Push Docker Image
         run: |
           IMAGE="europe-west3-docker.pkg.dev/flawless-augury-461509-f7/demo/app:latest"
-          docker build -t $IMAGE .
-          docker push $IMAGE
+          docker build -t "$IMAGE" .
+          docker push "$IMAGE"
