@@ -1,5 +1,4 @@
-name:  GR BUILD and PUSH
-
+name: GCR build and push
 on:
   workflow_dispatch:
 
@@ -11,15 +10,18 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v3
 
-      - name: Decode base64 secret to JSON key file
+      - name: Decode base64 key
+        id: decode_key
         run: |
-          echo "${{ secrets.GCP_SA_KEY_BASE64 }}" | base64 -d > sa-key.json
+          echo "${{ secrets.GCP_SA_KEY }}" | base64 -d > sa-key.json
+          echo "key_json<<EOF" >> $GITHUB_OUTPUT
+          cat sa-key.json >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: '${{ secrets.GCP_SA_KEY_BASE64 }}'
-          token_format: access_token  # Optional but recommended for clarity
+          credentials_json: '${{ steps.decode_key.outputs.key_json }}'
           export_default_credentials: true
 
       - name: Docker login to Artifact Registry
