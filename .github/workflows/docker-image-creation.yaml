@@ -25,4 +25,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: seemasanjaisinghani/myfirstapp:latest  # ✅ Change 'seemaj' and 'myfirstapp' accordingly
+          tags: sharadborhade/myfirstapp:latest  # ✅ Change 'seemaj' and 'myfirstapp' accordingly
